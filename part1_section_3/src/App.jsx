@@ -1,5 +1,15 @@
 import { useState } from 'react'
 
+const Button = ({ handleClick }) => {
+  return (
+    <div>
+      <button onClick={handleClick}>
+        next anecdote
+      </button>
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -11,12 +21,17 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
   const [selected, setSelected] = useState(0)
+
+  const randInt = max => Math.floor(Math.random() * max)
+
+  const changeToRandomAnecdote = () => setSelected(randInt(anecdotes.length))
 
   return (
     <div>
       {anecdotes[selected]}
+      <Button handleClick={() => changeToRandomAnecdote()} />
     </div>
   )
 }
