@@ -6,7 +6,7 @@ const Header = ({ heading }) => {
   )
 }
 
-const Display = ( {text, value} ) => {
+const StatisticLine = ( {text, value} ) => {
   return (
     <div>{text} {value}</div>
   )
@@ -47,12 +47,12 @@ const App = () => {
       <Button handleClick={() => changeValue(neutral, setNeutral, 1)} text="neutral"/>
       <Button handleClick={() => changeValue(bad, setBad, 1)} text="bad"/>
       <Header heading="statistics" />
-      
+
       {good > 0 || neutral > 0 || bad > 0 ? (
         <div>
-          <Display value={good} text="good" />
-          <Display value={neutral} text="neutral" />
-          <Display value={bad} text="bad" />
+          <StatisticLine value={good} text="good" />
+          <StatisticLine value={neutral} text="neutral" />
+          <StatisticLine value={bad} text="bad" />
           <Statistics all={all} average={average} positive={positive} />
         </div>
       ) : (
