@@ -8,7 +8,12 @@ const Header = ({ heading }) => {
 
 const StatisticLine = ( {text, value} ) => {
   return (
-    <div>{text} {value}</div>
+    <tbody>
+      <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+      </tr>
+    </tbody>
   )
 }
 
@@ -20,11 +25,20 @@ const Button = ( {handleClick, text} ) => {
 
 const Statistics = ({ all, average, positive }) => {
   return (
-    <div>
-      <div>all {all}</div>
-      <div>average {average}</div>
-      <div>positive {positive}</div>
-    </div>
+    <tbody>
+      <tr>
+        <td>all</td>
+        <td>{all}</td>
+      </tr>
+      <tr>
+        <td>average</td>
+        <td>{average}</td>
+      </tr>
+      <tr>
+        <td>positive</td>
+        <td>{positive}</td>
+      </tr>
+    </tbody>
   )
 }
 
@@ -49,12 +63,12 @@ const App = () => {
       <Header heading="statistics" />
 
       {good > 0 || neutral > 0 || bad > 0 ? (
-        <div>
+        <table>
           <StatisticLine value={good} text="good" />
           <StatisticLine value={neutral} text="neutral" />
           <StatisticLine value={bad} text="bad" />
           <Statistics all={all} average={average} positive={positive} />
-        </div>
+        </table>
       ) : (
         <div>No feedback given</div>
       )}
