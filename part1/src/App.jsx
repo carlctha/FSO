@@ -7,15 +7,9 @@ const Header = ({ course }) => {
 }
 
 const Content = ({ course }) => {
-  const content = []
-
-  for (let i = 0; i < course.parts.length; i++) {
-    content.push(
-      <Part content={
-        `${course.parts[i].name} ${course.parts[i].exercises}`
-      }/>
-    )
-  }
+  const content = course.parts.map(part => (
+    <Part content={`${part.name} ${part.exercises}`} />
+  ))
   return (
     content
   )
@@ -30,11 +24,9 @@ const Part = (props) => {
 }
 
 const Total = ( {course} ) => {
-  let total = 0
-
-  for (let i = 0; i < course.parts.length; i++) {
-    total += course.parts[i].exercises
-  }
+  let total = course.parts.reduce(
+    (sum, part) => sum += part.exercises, 0
+  )
   return (
     <p>
       <strong>total of {total} exercises</strong>
