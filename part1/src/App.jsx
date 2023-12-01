@@ -1,24 +1,23 @@
-const Header = (props) => {
+const Header = ({ course }) => {
   return (
     <h1>
-      {props.course.name}
+      {course.name}
     </h1>
   )
 }
 
-const Content = (props) => {
+const Content = ({ course }) => {
+  const content = []
+
+  for (let i = 0; i < course.parts.length; i++) {
+    content.push(
+      <Part content={
+        `${course.parts[i].name} ${course.parts[i].exercises}`
+      }/>
+    )
+  }
   return (
-    <div>
-      <Part content={
-        `${props.course.parts[0].name} ${props.course.parts[0].exercises}`
-      } />
-      <Part content={
-        `${props.course.parts[1].name} ${props.course.parts[1].exercises}`
-      } />
-      <Part content={
-        `${props.course.parts[2].name} ${props.course.parts[2].exercises}`
-      } />
-    </div>
+    content
   )
 }
 
@@ -30,13 +29,23 @@ const Part = (props) => {
   )
 }
 
-const Total = (props) => {
+const Total = ( {course} ) => {
   return (
     <p>
       {
-      props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises
+      course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
       }
     </p>
+  )
+}
+
+const Course = ({ course }) => {
+  return (
+    <div>
+      <Header course={course}/>
+      <Content course={course}/>
+      <Total course={course}/>
+    </div>
   )
 }
 
@@ -55,15 +64,17 @@ const App = () => {
       {
         name: "State of a component",
         exercises: 14
+      },
+      {
+        name: "Redux",
+        exercises: 11
       }
     ]
   }
 
   return (
     <div>
-      <Header course={course} />
-      <Content course={course} />
-      <Total course={course} />
+      <Course course={course}/>
     </div>
   )
 }

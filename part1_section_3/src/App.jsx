@@ -41,9 +41,7 @@ const App = () => {
 
   const mostVotesIndex = () => {
     const num = Math.max(...points)
-    console.log(num)
     const index = points.indexOf(num)
-    console.log(index)
     return index
   }
   
