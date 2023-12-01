@@ -30,11 +30,14 @@ const Part = (props) => {
 }
 
 const Total = ( {course} ) => {
+  let total = 0
+
+  for (let i = 0; i < course.parts.length; i++) {
+    total += course.parts[i].exercises
+  }
   return (
     <p>
-      {
-      course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
-      }
+      <strong>total of {total} exercises</strong>
     </p>
   )
 }
