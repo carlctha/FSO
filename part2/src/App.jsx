@@ -1,34 +1,56 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Person = ( {person} ) => {
+  return (
+    <li>{person.name}</li>
+  )
+}
+
+const App = () => {
+  const [persons, setPersons] = useState([
+    {
+      name: 'Arto Hellas',
+      id: 1
+    }
+  ]) 
+  const [newName, setNewName] = useState("")
+
+  const displayNames = persons.map(person => (
+    person.name
+  ))
+
+  const addName = (event) => {
+    event.preventDefault()
+    const personObj = {
+      name: newName,
+      id: persons.length + 1
+    }
+
+    setPersons(persons.concat(personObj))
+    setNewName("")
+  }
+
+  const handleInput = (event) => {
+    console.log(event.target.value)
+    setNewName(event.target.value)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={addName}>
+        <div>
+          name: <input value={newName} onChange={handleInput}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      <ul>
+        {persons.map(person => <Person key={person.id} person={person}/>)}
+      </ul>
+    </div>
   )
 }
 
