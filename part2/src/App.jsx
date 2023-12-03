@@ -6,6 +6,47 @@ const Person = ( {person} ) => {
   )
 }
 
+const Filter = ( {filter, handleFilter} ) => {
+  return (
+    <div>
+        filter shown with <input value={filter} onChange={handleFilter}/>
+    </div>
+  )
+  
+}
+
+const Form = (props) => {
+  return (
+    <form onSubmit={props.addInput}>
+      <div>
+        name: <input value={props.newName} onChange={props.handleInputName}/>
+      </div>
+      <div>
+        number: <input value={props.newNumber} onChange={props.handleInputNumber}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+const Persons = ( {filterPersons, persons, filter} ) => {
+  return (
+    <div>
+      {filter !== "" ? (
+        <ul>
+          {filterPersons.map(person => <Person key={person.id} person={person}/>)}
+        </ul>
+      ) : (
+        <ul>
+          {persons.map(person => <Person key={person.id} person={person}/>)}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -54,7 +95,7 @@ const App = () => {
     setFilter(event.target.value)
     let currFilter = event.target.value
     const new_persons = persons.filter(person => (
-      person.name.toLowerCase().includes(currFilter)
+      person.name.toLowerCase().includes(currFilter.toLowerCase())
     ))
     setFilterPersons(new_persons)
   }
@@ -62,31 +103,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addInput}>
-        <div>
-          filter shown with <input value={filter} onChange={handleFilter}/>
-        </div>
-        <h2>Add a new</h2>
-        <div>
-          name: <input value={newName} onChange={handleInputName}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleInputNumber}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter filter={filter} handleFilter={handleFilter}/>
+      <h2>Add a new</h2>
+      <Form
+        addInput={addInput}
+        newName={newName}
+        handleInputName={handleInputName}
+        newNumber={newNumber}
+        handleInputNumber={handleInputNumber}
+      />
       <h2>Numbers</h2>
-      {filter !== "" ? (
-        <ul>
-          {filterPersons.map(person => <Person key={person.id} person={person}/>)}
-        </ul>
-      ) : (
-        <ul>
-          {persons.map(person => <Person key={person.id} person={person}/>)}
-        </ul>
-      )}
+      <Persons filter={filter} filterPersons={filterPersons} persons={persons}/>
     </div>
   )
 }
