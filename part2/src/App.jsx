@@ -37,6 +37,7 @@ const App = () => {
 
       setPersons(persons.concat(personObj))
       setNewName("")
+      setNewNumber("")
     }
 
   }
@@ -52,16 +53,11 @@ const App = () => {
   const handleFilter = (event) => {
     setFilter(event.target.value)
     let currFilter = event.target.value
-    const new_persons = []
-    for (let i = 0; i < persons.length; i++) {
-      if (persons[i].name.toLowerCase().includes(currFilter.toLowerCase())) {
-        new_persons.push(persons[i])
-      }
-    }
+    const new_persons = persons.filter(person => (
+      person.name.toLowerCase().includes(currFilter)
+    ))
     setFilterPersons(new_persons)
   }
-
-  console.log(filterPersons)
 
   return (
     <div>
@@ -82,9 +78,15 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <ul>
-        {filterPersons.map(person => <Person key={person.id} person={person}/>)}
-      </ul>
+      {filter !== "" ? (
+        <ul>
+          {filterPersons.map(person => <Person key={person.id} person={person}/>)}
+        </ul>
+      ) : (
+        <ul>
+          {persons.map(person => <Person key={person.id} person={person}/>)}
+        </ul>
+      )}
     </div>
   )
 }
