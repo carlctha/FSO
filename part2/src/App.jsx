@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
-import axios from "axios"
+import service from "./services/persons"
 
-const Person = ( {person} ) => {
+const Person = ( {person, onClick} ) => {
   return (
-    <li>{person.name} {person.number}</li>
+    <li>
+      {person.name} {person.number} <button onClick={() => onClick(person)}>delete</button>
+    </li>
   )
 }
 
@@ -32,7 +34,7 @@ const Form = (props) => {
   )
 }
 
-const Persons = ( {filterPersons, persons, filter} ) => {
+const Persons = ( {filterPersons, persons, filter, onClick} ) => {
   return (
     <div>
       {filter !== "" ? (
@@ -41,7 +43,7 @@ const Persons = ( {filterPersons, persons, filter} ) => {
         </ul>
       ) : (
         <ul>
-          {persons.map(person => <Person key={person.id} person={person}/>)}
+          {persons.map(person => <Person key={person.id} person={person} onClick={onClick}/>)}
         </ul>
       )}
     </div>
@@ -56,10 +58,10 @@ const App = () => {
   const [filterPersons, setFilterPersons] = useState([...persons])
 
   const hook = () => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        setPersons(response.data)
+    service
+      .getAll()
+      .then(dbPersons => {
+        setPersons(dbPersons)
       })
   }
 
@@ -79,6 +81,8 @@ const App = () => {
         number: newNumber,
         id: persons.length + 1
       }
+
+      service.create(personObj)
 
       setPersons(persons.concat(personObj))
       setNewName("")
@@ -104,6 +108,15 @@ const App = () => {
     setFilterPersons(new_persons)
   }
 
+  const onClickDeleteButton = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      service.remove(person.id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
+    }
+  }
+
   useEffect(hook, [])
 
   return (
@@ -119,7 +132,7 @@ const App = () => {
         handleInputNumber={handleInputNumber}
       />
       <h2>Numbers</h2>
-      <Persons filter={filter} filterPersons={filterPersons} persons={persons}/>
+      <Persons filter={filter} filterPersons={filterPersons} persons={persons} onClick={onClickDeleteButton}/>
     </div>
   )
 }
