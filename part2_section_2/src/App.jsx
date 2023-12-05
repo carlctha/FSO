@@ -24,8 +24,21 @@ const Display = ({ country }) => {
   )
 }
 
+const CountryList = ({ countries, handleClick }) => {
+  return (
+    <div>
+      {countries.map(country => (
+        <div key={country.name.official}>
+          {country.name.common}
+        <button onClick={() => handleClick(country)}>show</button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const App = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState(null)
   const [display, setDisplay] = useState([])
 
   useEffect(() => {
@@ -38,10 +51,8 @@ const App = () => {
   }, [])
 
   const handleClick = (country) => {
-
     const info = <Display country={country}/>
     setDisplay(info)
-
   }
 
   const handleSearch = (event) => {
@@ -57,12 +68,10 @@ const App = () => {
       setDisplay("To many matches, specify another filter")
     }
     else if (countries.length < 10 && countries.length > 1) {
-      setDisplay(countries.map(country => (
-        <div key={country.name.official}>
-          {country.name.common}
-          <button onClick={() => handleClick(country)}>show</button>
-        </div>
-      )))
+      const countryList = <CountryList
+        countries={countries} handleClick={handleClick} 
+      />
+      setDisplay(countryList)
     }
     else {
       const info = <Display country={countries[0]}/>
