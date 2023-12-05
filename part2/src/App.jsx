@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import service from "./services/persons"
 
-const Person = ( {person, onClick} ) => {
+const Person = ({ person, onClick }) => {
   return (
     <li>
       {person.name} {person.number} <button onClick={() => onClick(person)}>delete</button>
@@ -9,7 +9,7 @@ const Person = ( {person, onClick} ) => {
   )
 }
 
-const Filter = ( {filter, handleFilter} ) => {
+const Filter = ({ filter, handleFilter }) => {
   return (
     <div>
         filter shown with <input value={filter} onChange={handleFilter}/>
@@ -34,7 +34,7 @@ const Form = (props) => {
   )
 }
 
-const Persons = ( {filterPersons, persons, filter, onClick} ) => {
+const Persons = ({ filterPersons, persons, filter, onClick }) => {
   return (
     <div>
       {filter !== "" ? (
@@ -50,12 +50,36 @@ const Persons = ( {filterPersons, persons, filter, onClick} ) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  } 
+  return (
+    <div className="noti">
+      {message}
+    </div>
+  )
+}
+
+const ErrorNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  } 
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [filter, setFilter] = useState("")
   const [filterPersons, setFilterPersons] = useState([...persons])
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const hook = () => {
     service
@@ -84,12 +108,24 @@ const App = () => {
             continue
           }
           else {
-            console.log(newNumber)
             updatedPersons[i].number = newNumber
             service.update(updatedPersons[i].id, updatedPersons[i])
+              .then(() => {
+                setMessage(`Number changed for ${newName}`)
+                setTimeout(() => {
+                  setMessage(null)
+                }, 5000)
+              })
+              .catch(() => {
+                setErrorMessage(
+                  `Information of ${newName} has already been removed from the server`
+                )
+                setTimeout(() => {
+                  setErrorMessage(null)
+                }, 5000)
+              })
           }
         }
-        console.log(updatedPersons)
         setPersons(updatedPersons)
       }
     }
@@ -100,7 +136,12 @@ const App = () => {
         id: persons.length + 1
       }
 
-      service.create(personObj).catch(error => {
+      service.create(personObj).then(() => {
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      }).catch(error => {
         console.error("Error creating person", error)
       })
 
@@ -143,6 +184,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
+      <ErrorNotification message={errorMessage}/>
       <Filter filter={filter} handleFilter={handleFilter}/>
       <h2>Add a new</h2>
       <Form
