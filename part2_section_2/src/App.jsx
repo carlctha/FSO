@@ -37,6 +37,13 @@ const App = () => {
     })
   }, [])
 
+  const handleClick = (country) => {
+
+    const info = <Display country={country}/>
+    setDisplay(info)
+
+  }
+
   const handleSearch = (event) => {
     const currValue = event.target.value
     const countries = []
@@ -53,6 +60,7 @@ const App = () => {
       setDisplay(countries.map(country => (
         <div key={country.name.official}>
           {country.name.common}
+          <button onClick={() => handleClick(country)}>show</button>
         </div>
       )))
     }
