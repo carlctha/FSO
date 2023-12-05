@@ -62,6 +62,8 @@ const App = () => {
       .getAll()
       .then(dbPersons => {
         setPersons(dbPersons)
+      }).catch(error => {
+        console.error("Error retrieving persons", error)
       })
   }
 
@@ -73,7 +75,23 @@ const App = () => {
     )
 
     if (nameInPersons) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )) {
+        const updatedPersons = [...persons]
+        for (let i = 0; i < updatedPersons.length; i++) {
+          if (updatedPersons[i].name !== newName) {
+            continue
+          }
+          else {
+            console.log(newNumber)
+            updatedPersons[i].number = newNumber
+            service.update(updatedPersons[i].id, updatedPersons[i])
+          }
+        }
+        console.log(updatedPersons)
+        setPersons(updatedPersons)
+      }
     }
     else {
       const personObj = {
@@ -82,13 +100,14 @@ const App = () => {
         id: persons.length + 1
       }
 
-      service.create(personObj)
+      service.create(personObj).catch(error => {
+        console.error("Error creating person", error)
+      })
 
       setPersons(persons.concat(personObj))
-      setNewName("")
-      setNewNumber("")
     }
-
+    setNewName("")
+    setNewNumber("")
   }
 
   const handleInputName = (event) => {
@@ -113,6 +132,8 @@ const App = () => {
       service.remove(person.id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== person.id))
+        }).catch(error => {
+          console.error("Error deleting person", error)
         })
     }
   }
